@@ -25,9 +25,12 @@ contract TheCloset is
 
     // price
 
-    mapping(string => uint256) price;
-    mapping(string => address) sellerCheck;
-    mapping(address => bool) sellerAuthorized;
+    mapping(string => uint256) public price;
+    mapping(string => address) public sellerCheck;
+    mapping(address => bool) public sellerAuthorized;
+    mapping(uint256 => string) tokenToProduct;
+    mapping(string => uint256) public inventory;
+    mapping(string => string) public metadataURI;
 
     function getPrice(string memory productId) public view returns (uint256) {
         return price[productId];
@@ -42,8 +45,15 @@ contract TheCloset is
         return newPrice;
     }
 
-    function RegisterProduct(string memory productId, uint256 newPrice) public {
+    function RegisterProduct(
+        string memory productId,
+        uint256 newPrice,
+        uint256 supply,
+        string memory metadata
+    ) public {
         require(sellerAuthorized[msg.sender] == true, "seller not authorized");
+        metadataURI[productId] = metadata;
+        inventory[productId] = supply;
         price[productId] = newPrice;
         sellerCheck[productId] = msg.sender;
     }
@@ -51,8 +61,22 @@ contract TheCloset is
     function RegisterSeller(address seller) public onlyOwner {
         sellerAuthorized[seller] = true;
     }
- 
-    function Seller(){}
+
+    // function SellerMint(){}
+    function BuyProduct(string memory productId) public payable {
+        require(msg.value >= price[productId], "msg value too low");
+        require(inventory[productId] >= 0, "out of stock");
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        tokenToProduct[tokenId] = productId;
+        inventory[productId]--;
+        _mint(msg.sender, tokenId);
+        _setTokenURI(tokenId, metadataURI[productId]);
+    }
+
+    function TotalTokens() public view returns (uint256) {
+        return _tokenIdCounter.current();
+    }
 
     function pause() public onlyOwner {
         _pause();
