@@ -1,0 +1,304 @@
+directive @authorization(role: Role = USER) on FIELD_DEFINITION
+directive @authentication on FIELD_DEFINITION
+directive @toCase(to: Int!, key: String!) on FIELD_DEFINITION
+
+type User {
+  id: ID!
+  photoUrl: String
+  createdAt: String
+  email: String!
+  name: String!
+  role: Role!
+  aboutMe: String!
+  tagLine: String
+  reviews: [Review]!
+  social: [Social]!
+  bookings: [Booking]!
+  designation: String!
+  field: [String]!
+  requests: [Request]
+
+  mentorProfile: MentorProfile
+  liveSessions: [LiveSession]!
+}
+
+type Field {
+  id: String
+  val: String
+}
+
+type MentorProfile {
+  id: ID!
+  bannerUrl: String
+  price: Price!
+  visible: Boolean!
+  acceptingReview: Boolean!
+  education: [Education]!
+  experience: [Experience]!
+  reviews: [Review]!
+}
+
+type Price {
+  currency: String!
+  val: Int!
+}
+
+enum Role {
+  USER
+  MENTOR
+  ADMIN
+}
+
+type Booking {
+  id: ID!
+  user: User!
+  mentor: User!
+  requests: [Request]!
+  date: String
+  slot: [Schedule]
+  meeting: Meeting
+}
+
+type Meeting {
+  id: ID!
+  allowedList: [String!]!
+  events: [Event]!
+  time: String
+}
+
+type Event {
+  id: String!
+  type: String!
+  created_at: String!
+  trigger: User!
+}
+
+type Request {
+  sender: User!
+  reciever: User!
+  duration: String!
+  # slots is arr of starting time
+  slots: [String]!
+  # 0: not sent, 1: pending, 2: accepted, 3: rejected
+  status: Int!
+}
+
+type Social {
+  name: String!
+  url: String!
+  visible: Boolean!
+}
+
+type Schedule {
+  id: ID
+  startTime: String
+  endTime: String
+  day: Int
+  weekly: Boolean
+  User: User
+  request: Request
+}
+
+type Review {
+  id: ID
+  user: User
+  text: String
+  title: String
+  rating: Int
+}
+
+type Experience {
+  id: ID
+  startDate: String
+  endDate: String
+  present: Boolean
+  title: String
+  description: String
+  organisation: String
+  mentorProfile: MentorProfile
+}
+
+type Education {
+  id: ID
+  startDate: String
+  endDate: String
+  present: Boolean
+  title: String
+  description: String
+  institute: String
+  mentorProfile: MentorProfile
+}
+type LiveSession {
+  id: String
+  url: String
+  title: String
+  thumbnail: String
+  topic: String
+  date: String
+  description: String
+  user: User
+}
+type MentorApplication {
+  id: String
+  user: User @authorization(role: ADMIN) @authentication
+  status: Int
+}
+
+type Query {
+  GetUser: User! @authentication
+  GetUserById(id: String): User!
+  GetBookings: [Booking]! @authentication
+  GetMeetings: [Meeting]! @authentication
+  GetBooking: Booking! @authentication
+  GetUsers: [User] @authorization(role: ADMIN) @authentication
+  GetReviews(mentorId: String!, page: Int!): GetReviewsOutput!
+  GetUserSessions(id: String!, page: Int!): [LiveSession]!
+  GetUserFields(id: String): [Field]
+  SearchMentor(text: String!, page: Int!): SearchData!
+  SearchSession(text: String!, page: Int!): SearchSessionOutput!
+  SearchFields(text: String!): [Field]!
+  GetMentorApplications: [MentorApplication]
+    @authorization(role: ADMIN)
+    @authentication
+  HomeMentor: [User]!
+  HomeSession: [LiveSession]!
+}
+
+type SearchData {
+  data: [User]!
+  count: Int!
+}
+type SearchSessionOutput {
+  data: [LiveSession]!
+  count: Int!
+}
+type GetReviewsOutput {
+  data: [Review]!
+  count: Int!
+}
+type Mutation {
+  updateDisplayInfo(data: UpdateUserDisplayInfoInput): User! @authentication
+  updateBio(data: updateUserBioInput): User! @authentication
+  updateProfilePic(url: String): User! @authentication
+  createBooking(data: CreateBookingInput): Booking! @authentication
+  createMeeting(data: CreateMeetingInput): Meeting! @authentication
+  createContacts(data: SocialInput): User! @authentication
+  deleteContacts(data: deleteContactsInput): User! @authentication
+  createLiveSession(data: createLiveSessionInput): LiveSession!
+    @authorization(role: MENTOR)
+    @authentication
+  updateLiveSession(data: createLiveSessionInput, id: String!): LiveSession!
+    @authorization(role: MENTOR)
+    @authentication
+  deleteLiveSession(id: String!): LiveSession!
+    @authorization(role: MENTOR)
+    @authentication
+  updateVisibility(val: Boolean!): User!
+    @authorization(role: MENTOR)
+    @authentication
+  updatePrice(data: PriceInput): User!
+    @authorization(role: MENTOR)
+    @authentication
+  createExperience(data: updateUserEduExpInput): Experience!
+    @authorization(role: MENTOR)
+    @authentication
+  updateExperiences(data: updateUserEduExpInput!, id: String!): Experience!
+    @authorization(role: MENTOR)
+    @authentication
+  deleteExperience(id: String!): Experience!
+    @authorization(role: MENTOR)
+    @authentication
+  createEducation(data: updateUserEduExpInput!): Education!
+    @authorization(role: MENTOR)
+    @authentication
+  updateEducation(data: updateUserEduExpInput!, id: String!): Education!
+    @authorization(role: MENTOR)
+    @authentication
+  deleteEducation(id: String!): Education!
+    @authorization(role: MENTOR)
+    @authentication
+  updateBanner(url: String!): User! @authorization(role: MENTOR) @authentication
+  addReview(mentorId: String!, data: addReviewInput!): Review @authentication
+  deleteReview(id: String!): Review @authentication
+  addField(data: String!): Field!
+    @toCase(to: 1, key: "data")
+    @authorization(role: MENTOR)
+    @authentication
+  deleteField(id: String!): Field! @authorization(role: MENTOR) @authentication
+  applyMentor: MentorApplication @authorization(role: USER) @authentication
+  updateMentorStatus(
+    applicationId: String!
+    status: Boolean!
+  ): MentorApplication @authorization(role: ADMIN) @authentication
+}
+input createLiveSessionInput {
+  url: String
+  title: String
+  thumbnail: String
+  topic: String
+  date: String
+  description: String
+}
+input addReviewInput {
+  text: String!
+  title: String!
+  rating: Int!
+}
+input CreateUserInput {
+  name: String!
+  email: String!
+  photoUrl: String
+}
+
+input CreateMeetingInput {
+  url: String!
+  bookingId: ID!
+}
+
+input CreateBookingInput {
+  userId: ID!
+  mentorId: ID!
+}
+
+input UpdateUserDisplayInfoInput {
+  name: String
+  designation: String
+  tagLine: String
+}
+
+input createContactsInput {
+  data: SocialInput
+}
+
+input deleteContactsInput {
+  url: String!
+}
+
+input SocialInput {
+  name: String!
+  url: String!
+  visible: Boolean!
+}
+
+input updateUserBioInput {
+  bio: String!
+}
+
+input updateUserEduExpInput {
+  startDate: String
+  endDate: String
+  present: Boolean
+  title: String
+  description: String
+  institute: String
+}
+
+input PriceInput {
+  currency: String!
+  val: Int!
+}
+
+input UpdateMentorInput {
+  name: String
+  social: [SocialInput]!
+}
