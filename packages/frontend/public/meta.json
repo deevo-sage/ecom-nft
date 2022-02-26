@@ -1,0 +1,50 @@
+{
+  "name": "frontend",
+  "plugins": [
+    {
+      "name": "Chakra UI",
+      "description": "Chakra UI is a simple, modular and accessible component library that gives you the building blocks you need to build your React applications.",
+      "url": "https://chakra-ui.com/docs/getting-started"
+    },
+    {
+      "name": "SASS/SCSS",
+      "description": "Sass is a stylesheet language that’s compiled to CSS. It allows you to use variables, nested rules, mixins, functions, and more, all with a fully CSS-compatible syntax.",
+      "url": "https://sass-lang.com/documentation"
+    },
+    {
+      "name": "Environment Variables",
+      "description": "Use environment variables in your next.js project for server side, client or both.",
+      "url": "https://github.com/vercel/next.js/tree/canary/examples/environment-variables"
+    },
+    {
+      "name": "graphql-request",
+      "description": "Minimal GraphQL client supporting Node and browsers for scripts or simple apps",
+      "url": "https://github.com/prisma-labs/graphql-request"
+    },
+    {
+      "name": "React Query",
+      "description": "Hooks for fetching, caching and updating asynchronous data in React.",
+      "url": "https://react-query.tanstack.com/overview"
+    },
+    {
+      "name": "react-use",
+      "description": "A Collection of useful React hooks.",
+      "url": "https://github.com/streamich/react-use"
+    },
+    {
+      "name": "Recoil",
+      "description": "Recoil works and thinks like React. Add some to your app and get fast and flexible shared state.",
+      "url": "https://recoiljs.org/docs/introduction/installation"
+    },
+    {
+      "name": "ESLint",
+      "description": "A pluggable and configurable linter tool for identifying and reporting on patterns in JavaScript. Maintain your code quality with ease.",
+      "url": "https://eslint.org/docs/user-guide/getting-started"
+    },
+    {
+      "name": "Prettier",
+      "description": "An opinionated code formatter; Supports many languages; Integrates with most editors.",
+      "url": "https://prettier.io/docs/en/index.html"
+    }
+  ]
+}
