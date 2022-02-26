@@ -12,7 +12,7 @@
   "scripts": {
     "d": "turbo run d",
     "dev:s": "turbo run devs",
-    "dev:f": "turbo run devf",
+    "dev:f": "turbo run devf chain",
     "dev:c": "turbo run devc chain",
     "contract-testing:build": "yarn workspace @the-closet/contract-testing build --max-old-space-size=12288",
     "contract-testing:eject": "yarn workspace @the-closet/contract-testing eject",
