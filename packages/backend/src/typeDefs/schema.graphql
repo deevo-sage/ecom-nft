@@ -122,12 +122,12 @@ type Query {
 type Query {
   GetUser: User!
   GetUserByAddress(address: String): User!
-  SearchProduct(name: String); [Product]!
+  SearchProduct(name: String): [Product]!
   GetProductById(id: String): Product
   GetProductsByCategory(category: String): [Product]!
   GetSellerById(id: String): Seller
-  GetNFTById(id:String): NFT
-  SearchSellers(name:String): [Seller]!
+  GetNFTById(id: String): NFT
+  SearchSellers(name: String): [Seller]!
 }
 
 type Mutation {

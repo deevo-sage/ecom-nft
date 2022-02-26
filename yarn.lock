@@ -10681,15 +10681,9 @@ dataloader@2.0.0:
   integrity sha512-YzhyDAwA4TaQIhM5go+vCLmU0UikghC/t9DTQYZR2M/UvZ1MdOhPezSDZcjj9uqQJOMqjLcpWtyW2iNINdlatQ==
 
 date-and-time@^2.0.0:
-<<<<<<< HEAD
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/date-and-time/-/date-and-time-2.1.2.tgz#5b0e71296bbdd66ff1ce0e456c77d40f1479db5a"
-  integrity sha512-YlQUtuqYGPR58I7jzx4TIjknN9wCKjwewiylIp+P4xMuO23mlZje3Qe9gYCKp/6ncbeNpU8ZnPdhQNZnVphveQ==
-=======
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/date-and-time/-/date-and-time-2.2.0.tgz#8b64dd8a55415da87d1f7eae2066ab20a3cf0430"
   integrity sha512-LRljAtx+9iz1Uztw5jUuVjLyv8IBQEUNGGc+QteEfZYj/UndICRPVK3/3++BQQq8dsc5reJDZ3bRBAZObbcAHQ==
->>>>>>> b7e7f57af1a0877d367dd455a2a8a8d8907403ef
 
 date-fns@2.x:
   version "2.23.0"
