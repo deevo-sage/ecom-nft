@@ -40,7 +40,7 @@ enum Category {
   LowerBody
 }
 
-model Buyer {
+model User {
   id       String @id @default(uuid())
   name     String
   email    String @unique
@@ -83,9 +83,10 @@ enum Chain {
 model Product {
   id       String         @id @default(uuid())
   name     String
-  NFT      NFT            @relation(fields: [nFTId], references: [id])
+  NFTs     NFT[]
   nFTId    String
   category Category
+  stock    Int
   method   PurchaseMethod @default(Cash)
   chain    Chain          @default(matic)
   price    Int
@@ -101,14 +102,16 @@ enum NFTStatus {
 }
 
 model NFT {
-  id       String    @id @default(uuid())
-  status   NFTStatus @default(not_purchased)
-  image    String
-  desc     String
-  traits   Json[]
-  Seller   Seller?   @relation(fields: [sellerId], references: [id])
-  sellerId String?
-  Buyer    Buyer?    @relation(fields: [buyerId], references: [id])
-  buyerId  String?
-  Product  Product[]
+  id        String    @id @default(uuid())
+  tokenId   Int
+  status    NFTStatus @default(not_purchased)
+  image     String
+  desc      String
+  traits    Json[]
+  Seller    Seller?   @relation(fields: [sellerId], references: [id])
+  sellerId  String?
+  User     User?    @relation(fields: [UserId], references: [id])
+  UserId   String?
+  productId String
+  Product   Product   @relation(fields: [productId], references: [id])
 }

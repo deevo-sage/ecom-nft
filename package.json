@@ -10,6 +10,7 @@
   ],
   "private": true,
   "scripts": {
+    "dev:s": "turbo run devs",
     "dev:f": "turbo run devf",
     "dev:c": "turbo run devc chain",
     "contract-testing:build": "yarn workspace @the-closet/contract-testing build --max-old-space-size=12288",

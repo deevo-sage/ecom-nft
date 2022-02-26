@@ -1,2 +1,119 @@
-directive @authorization(role: Role = USER) on FIELD_DEFINITION
-directive @authentication on FIELD_DEFINITION
+# directive @authorization(role: Role = USER) on FIELD_DEFINITION
+# directive @authentication on FIELD_DEFINITION
+
+# Categories of clothes
+enum UpperBodyWinter {
+  Jackets
+  Coats
+  Mufflers
+  Caps
+  FullSleeveTShirts
+  FullSleeveShirts
+}
+
+enum UpperBodySummer {
+  HalfSleeveTShirts
+  HalfSleeveShirts
+  CutSleeveTShirts
+}
+
+enum LowerBody {
+  Jeans
+  Shorts
+  Pants
+}
+
+enum UpperBody {
+  UpperBodySummer
+  UpperBodyWinter
+}
+
+enum Category {
+  UpperBody
+  LowerBody
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  photoUrl: String!
+  address: String!
+  closet: [NFT]!
+}
+
+type Seller {
+  id: ID!
+  name: String!
+  photoUrl: String!
+  about: String!
+  products: [Product]!
+  NFT: [NFT]!
+}
+
+enum ProductStatus {
+  purchased_not_delivered
+  purchased_delivered
+  not_purchased
+}
+
+enum Crypto {
+  matic
+  ether
+}
+
+enum PurchaseMethod {
+  Card
+  Cash
+  Crypto
+}
+
+enum Chain {
+  matic
+  eth
+}
+
+type Product {
+  id: ID!
+  name: String!
+  NFTs: [NFT]!
+  nFTId: String!
+  category: Category!
+  stock: Int!
+  method: PurchaseMethod!
+  chain: Chain!
+  price: Int!
+  status: ProductStatus!
+  Seller: Seller
+  sellerId: String
+}
+
+enum NFTStatus {
+  purchased_and_not_revealed
+  # Product purchased, NFT not revealed
+  purchased_and_revealed
+  # Product purchased, NFT revealed
+  not_purchased
+  # Product not purchased
+}
+type Trait {
+  name: String
+  value: String
+}
+type NFT {
+  id: ID!
+  tokenId: Int!
+  status: NFTStatus!
+  image: String!
+  desc: String!
+  traits: [Trait]!
+  Seller: Seller
+  sellerId: String
+  User: User
+  UserId: String
+  productId: String!
+  Product: Product!
+}
+type Query {
+  getUser(id: String): User
+}

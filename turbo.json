@@ -28,6 +28,9 @@
         "devc": {
             "cache": false
         },
+        "devs": {
+            "cache": false
+        },
         "chain": {
             "cache": false
         },

@@ -14,10 +14,10 @@ import {
   authorizationDirective,
   toCaseDirective,
 } from "./typeDefs/directives";
-import { UserServices } from "./service/user";
+// import { UserServices } from "./service/user";
 import CreateCheckoutSession from "./middlewares/stripe";
 
-export const prisma = new PrismaClient();
+// export const prisma = new PrismaClient();
 
 async function startApolloServer() {
   let schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -32,22 +32,10 @@ async function startApolloServer() {
 
   const server = new ApolloServer({
     schema,
-    // mocks: true,
-    // mockEntireSchema: false,
+    mocks: true,
+    mockEntireSchema: true,
     context: async ({ req, res }) => {
-      const user = await GetCurrentUser(req, res);
-      if (user) {
-        const services = new UserServices();
-        let ourUser: any = await services.get(user?.email);
-        if (!Boolean(ourUser)) {
-          ourUser = await services.createUser(
-            user.email || "",
-            user.name,
-            user.picture
-          );
-        }
-        return ourUser;
-      } else return null;
+      return null;
     },
     // plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
