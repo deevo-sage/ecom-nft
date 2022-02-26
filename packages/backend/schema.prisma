@@ -41,12 +41,13 @@ enum Category {
 }
 
 model User {
-  id       String @id @default(uuid())
-  name     String
-  email    String @unique
-  photoUrl String
-  address  String @unique
-  closet   NFT[]
+  id            String          @id @default(uuid())
+  name          String
+  email         String          @unique
+  photoUrl      String
+  address       String          @unique
+  closet        NFT[]
+  ProductInCart ProductInCart[]
 }
 
 model Seller {
@@ -81,19 +82,20 @@ enum Chain {
 }
 
 model Product {
-  id       String         @id @default(uuid())
-  name     String
-  NFTs     NFT[]
-  nFTId    String
-  category Category
-  stock    Int
-  images String[]
-  method   PurchaseMethod @default(Cash)
-  chain    Chain          @default(matic)
-  price    Int
-  status   ProductStatus  @default(not_purchased)
-  Seller   Seller?        @relation(fields: [sellerId], references: [id])
-  sellerId String?
+  id            String          @id @default(uuid())
+  name          String
+  NFTs          NFT[]
+  nFTId         String
+  category      Category
+  stock         Int
+  images        String[]
+  method        PurchaseMethod  @default(Cash)
+  chain         Chain           @default(matic)
+  price         Int
+  status        ProductStatus   @default(not_purchased)
+  Seller        Seller?         @relation(fields: [sellerId], references: [id])
+  sellerId      String?
+  ProductInCart ProductInCart[]
 }
 
 enum NFTStatus {
@@ -111,8 +113,16 @@ model NFT {
   traits    Json[]
   Seller    Seller?   @relation(fields: [sellerId], references: [id])
   sellerId  String?
-  User     User?    @relation(fields: [UserId], references: [id])
-  UserId   String?
+  User      User?     @relation(fields: [UserId], references: [id])
+  UserId    String?
   productId String
   Product   Product   @relation(fields: [productId], references: [id])
+}
+
+model ProductInCart {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
 }

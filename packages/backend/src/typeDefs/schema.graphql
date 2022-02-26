@@ -120,7 +120,7 @@ type Query {
 }
 
 type Query {
-  GetUser: User!
+  SearchUser: User!
   GetUserByAddress(address: String): User!
   SearchProduct(name: String); [Product]!
   GetProductById(id: String): Product
