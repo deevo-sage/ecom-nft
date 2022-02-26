@@ -14,22 +14,12 @@ import "swiper/css/bundle";
 import styles from "../styles/carousel.module.css";
 import SectionBox from "../src/components/SectionBox";
 import Layout from "../src/components/Layout";
-import { onAuthStateChanged } from "firebase/auth";
 
 const Home: NextPage = () => {
   const [items, setItems] = useState<item[] | null>();
-  const getItems = async () => {
-    fetch("/api/items", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    }).then((res) => {
-      res.json().then((data) => {
-        setItems(data);
-      });
-    });
-  };
 
   useEffect(() => {
+    const getItems = async () => {};
     getItems();
   }, []);
 
@@ -41,7 +31,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/store.png" />
       </Head>
 
-      <Layout>
+      <Layout items={items} setItems={setItems}>
         <main>
           <div className="flex flex-col pb-[10vh] min-h-screen text-gray-200 ">
             {/* <Navbar /> */}
@@ -116,17 +106,17 @@ const Home: NextPage = () => {
               />
             </Flex>
             <chakra.div px={14} className="flex flex-wrap">
-              {items?.map((e) => {
+              {items?.map((e: any) => {
                 return (
                   <BuyCard
-                    id={e.id}
-                    prodImage={e.images}
+                    id={e.name}
+                    prodImage={e.image}
                     desc={e.description}
-                    currency={e.currency}
+                    currency={"eth"}
                     price={e.price}
                     productName={e.name}
-                    discount={e.discount}
-                    key={e.id}
+                    discount={0}
+                    key={e.name}
                   />
                 );
               })}

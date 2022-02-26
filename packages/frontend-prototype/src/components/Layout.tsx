@@ -50,6 +50,16 @@ import router, { Router } from "next/router";
 import { useStaticJsonRPC } from "../../hooks";
 import { Transactor, Web3ModalSetup } from "../../helpers";
 import { NETWORKS, ALCHEMY_KEY } from "../../constants";
+import {
+  useBalance,
+  useContractLoader,
+  useContractReader,
+  useGasPrice,
+  useOnBlock,
+  useUserProviderAndSigner,
+} from "eth-hooks";
+import deployedContracts from "../../contracts/hardhat_contracts.json";
+import externalContracts from "../../contracts/external_contracts";
 
 const { ethers } = require("ethers");
 
@@ -76,22 +86,33 @@ const providers = [
 
 export default function SidebarWithHeader({
   children,
+  items,
+  setItems,
 }: {
   children: ReactNode;
+  items: any;
+  setItems: any;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const user = JSON.parse(
-    useSelector((state: userState) => state.user.value) || "{}"
-  ) as User;
-  const cart = useSelector((state: userState) => state.cart.value);
+  const initialNetwork = NETWORKS.localhost; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
-  const [avatar, setAvatar] = useState(
-    `https://avatars.dicebear.com/api/avataaars/${(
-      Math.random() * 1000
-    ).toString()}.png`
-  );
+  // 😬 Sorry for all the console logging
+  const DEBUG = true;
+  const NETWORKCHECK = true;
+  const USE_BURNER_WALLET = true; // toggle burner wallet feature
+  const USE_NETWORK_SELECTOR = false;
 
+  const web3Modal = Web3ModalSetup();
+
+  // 🛰 providers
+  const providers = [
+    "https://eth-mainnet.gateway.pokt.network/v1/lb/611156b4a585a20035148406",
+    `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`,
+    "https://rpc.scaffoldeth.io:48544",
+  ];
+
+  // function App(props) {
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
   const networkOptions = [initialNetwork.name, "mainnet", "rinkeby"];
@@ -114,6 +135,11 @@ export default function SidebarWithHeader({
   ]);
   const mainnetProvider = useStaticJsonRPC(providers);
 
+  if (DEBUG) console.log(`Using ${selectedNetwork} network`);
+
+  // 🛰 providers
+  if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
+
   const logoutOfWeb3Modal = async () => {
     await web3Modal.clearCachedProvider();
     if (
@@ -128,6 +154,12 @@ export default function SidebarWithHeader({
     }, 1);
   };
 
+  /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
+  // const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
+
+  /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
+  const gasPrice = useGasPrice(targetNetwork, "fast");
+  // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
   const userProviderAndSigner = useUserProviderAndSigner(
     injectedProvider,
     localProvider,
@@ -145,6 +177,7 @@ export default function SidebarWithHeader({
     getAddress();
   }, [userSigner]);
 
+  // You can warn the user if you would like them to be on a specific network
   const localChainId =
     localProvider && localProvider._network && localProvider._network.chainId;
   const selectedChainId =
@@ -153,42 +186,93 @@ export default function SidebarWithHeader({
     userSigner.provider._network &&
     userSigner.provider._network.chainId;
 
+  // For more hooks, check out 🔗eth-hooks at: https://www.npmjs.com/package/eth-hooks
+
+  // The transactor wraps transactions and provides notificiations
+  const tx = Transactor(userSigner, gasPrice);
+
+  // 🏗 scaffold-eth is full of handy hooks like this one to get your balance:
   const yourLocalBalance = useBalance(localProvider, address);
 
-  // const yourMainnetBalance = useBalance(mainnetProvider, address);
+  // Just plug in different 🛰 providers to get your balance on different chains:
+  const yourMainnetBalance = useBalance(mainnetProvider, address);
 
-  const loadWeb3Modal = useCallback(async () => {
-    const provider = await web3Modal.connect();
-    setInjectedProvider(new ethers.providers.Web3Provider(provider));
+  // const contractConfig = useContractConfig();
 
-    provider.on("chainChanged", (chainId) => {
-      console.log(`chain changed to ${chainId}! updating providers`);
-      setInjectedProvider(new ethers.providers.Web3Provider(provider));
-    });
+  const contractConfig: any = {
+    deployedContracts: deployedContracts || {},
+    externalContracts: externalContracts || {},
+  };
 
-    provider.on("accountsChanged", () => {
-      console.log(`account changed!`);
-      setInjectedProvider(new ethers.providers.Web3Provider(provider));
-    });
+  // Load in your local 📝 contract and read a value from it:
+  const readContracts = useContractLoader(localProvider, contractConfig);
+  const writeContracts = useContractLoader(
+    userSigner,
+    contractConfig,
+    localChainId
+  );
 
-    // Subscribe to session disconnection
-    provider.on("disconnect", (code, reason) => {
-      console.log(code, reason);
-      logoutOfWeb3Modal();
-    });
-    // eslint-disable-next-line
-  }, [setInjectedProvider]);
+  // If you want to make 🔐 write transactions to your contracts, use the userSigner:
+  const writeContracts = useContractLoader(
+    userSigner,
+    contractConfig,
+    localChainId
+  );
+  // console.log(readContracts);
+  // console.log(writeContracts);
 
-  useEffect(() => {
-    if (web3Modal.cachedProvider) {
-      loadWeb3Modal();
+  // EXTERNAL CONTRACT EXAMPLE:
+  //
+  // If you want to bring in the mainnet DAI contract it would look like:
+  const mainnetContracts = useContractLoader(mainnetProvider, contractConfig);
+  // If you want to call a function on a new block
+  useOnBlock(mainnetProvider, () => {
+    console.log(
+      `⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`
+    );
+  });
+
+  // Then read your DAI balance like:
+  const myMainnetDAIBalance = useContractReader(
+    mainnetContracts,
+    "DAI",
+    "balanceOf",
+    ["0x34aA3F359A9D614239015126635CE7732c18fDF3"]
+  );
+
+  // keep track of a variable from the contract in the local React state:
+  const purpose = useContractReader(readContracts, "YourContract", "purpose");
+
+  const user = JSON.parse(
+    useSelector((state: userState) => state.user.value) || "{}"
+  ) as User;
+  const cart = useSelector((state: userState) => state.cart.value);
+
+  const [avatar, setAvatar] = useState(
+    `https://avatars.dicebear.com/api/avataaars/${(
+      Math.random() * 1000
+    ).toString()}.png`
+  );
+
+  useEffect(async () => {
+    let f = await writeContracts.TotalTokens();
+    // let products = writeContracts.tokenURI()
+    for (let i = 0; i < f; i++) {
+      let product = writeContracts.tokenURI(i);
+      let r = fetch(product)
+        .then((res) => res.json())
+        .then(async (data) => {
+          let id = await writeContracts.tokenToProduct(i);
+          let price = await writeContracts.getPrice(id);
+          setItems((prev: any) => {
+            let temp = JSON.parse(JSON.stringify(prev));
+            temp.push(data);
+            return temp;
+          });
+        });
     }
-  }, [loadWeb3Modal]);
-
-  const faucetAvailable =
-    localProvider &&
-    localProvider.connection &&
-    targetNetwork.name.indexOf("local") !== -1;
+    console.log(products);
+  }, []);
 
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>

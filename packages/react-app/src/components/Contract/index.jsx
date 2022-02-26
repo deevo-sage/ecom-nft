@@ -67,7 +67,7 @@ export default function Contract({
 
   const address = contract ? contract.address : "";
   const contractIsDeployed = useContractExistsAtAddress(provider, address);
-
+  // contract.inte
   const displayedContractFunctions = useMemo(() => {
     const results = contract
       ? Object.entries(contract.interface.functions).filter(
