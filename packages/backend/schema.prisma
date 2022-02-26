@@ -87,6 +87,7 @@ model Product {
   nFTId    String
   category Category
   stock    Int
+  images String[]
   method   PurchaseMethod @default(Cash)
   chain    Chain          @default(matic)
   price    Int

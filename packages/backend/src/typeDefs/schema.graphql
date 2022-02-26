@@ -80,6 +80,7 @@ type Product {
   nFTId: String!
   category: Category!
   stock: Int!
+  images: [String]
   method: PurchaseMethod!
   chain: Chain!
   price: Int!
@@ -116,4 +117,48 @@ type NFT {
 }
 type Query {
   getUser(id: String): User
+}
+
+type Query {
+  GetUser: User!
+  GetUserByAddress(address: String): User!
+  SearchProduct(name: String); [Product]!
+  GetProductById(id: String): Product
+  GetProductsByCategory(category: String): [Product]!
+  GetSellerById(id: String): Seller
+  GetNFTById(id:String): NFT
+  SearchSellers(name:String): [Seller]!
+}
+
+type Mutation {
+  addProduct(data: addProduct): Product!
+  updateUserProfilePic(photoUrl: String): User!
+  addNFTToCloset(data: addNFTToCloset): User!
+  updateNFTStatus(data: updateNFTStatus): NFT!
+  updateProductStatus(data: updateProductStatus): Product!
+}
+
+input updateProductStatus {
+  status: ProductStatus
+  ProductId: ID!
+}
+
+input addProductToCloset {
+  NFTId: ID!
+  UserId: ID!
+}
+
+input addProduct {
+  name: String!
+  category: Category!
+  stock: Int!
+  chain: Chain!
+  price: Int!
+  images: [String]
+  sellerId: ID!
+}
+
+input updateNFTStatus {
+  status: NFTStatus
+  NFTId: ID!
 }
