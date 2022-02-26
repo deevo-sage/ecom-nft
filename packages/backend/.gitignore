@@ -42,6 +42,8 @@ build/Release
 node_modules/
 jspm_packages/
 
+./types/admin.json
+
 # TypeScript v1 declaration files
 typings/
 
