@@ -19,26 +19,12 @@
         "lint": {
             "outputs": []
         },
-        "dev": {
-            "cache": false
-        },
-        "devf": {
-            "cache": false
-        },
-        "devc": {
-            "cache": false
-        },
-        "devs": {
-            "cache": false
-        },
-        "chain": {
-            "cache": false
-        },
-        "deployh": {
-            "cache": false
-        },
-        "deployc": {
-            "cache": false
-        }
+        "dev": {},
+        "devf": {},
+        "devc": {},
+        "devs": {},
+        "chain": {},
+        "deployh": {},
+        "deployc": {}
     }
 }
