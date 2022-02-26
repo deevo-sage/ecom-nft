@@ -4,6 +4,12 @@ packages/subgraph/abis/*
 packages/hardhat/*.txt
 **/aws.json
 
+
+.turbo
+build/**
+dist/**
+.next/**
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 **/node_modules
 

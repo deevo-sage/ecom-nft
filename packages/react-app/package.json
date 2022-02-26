@@ -1,5 +1,5 @@
 {
-  "name": "@scaffold-eth/react-app",
+  "name": "@the-closet/contract-testing",
   "version": "1.0.0",
   "homepage": ".",
   "browserslist": {
@@ -88,7 +88,7 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "prestart": "node ./scripts/create_contracts.js",
-    "start": "react-scripts start",
+    "devc": "react-scripts start",
     "test": "react-scripts test",
     "lint": "eslint --config ./.eslintrc.js --ignore-path ./.eslintignore ./src/**/*",
     "ipfs": "node ./scripts/ipfs.js",
