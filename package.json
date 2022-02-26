@@ -10,6 +10,7 @@
   ],
   "private": true,
   "scripts": {
+    "d": "turbo run d",
     "dev:s": "turbo run devs",
     "dev:f": "turbo run devf",
     "dev:c": "turbo run devc chain",
