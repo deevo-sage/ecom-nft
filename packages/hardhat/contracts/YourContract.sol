@@ -13,7 +13,23 @@ contract YourContract is ERC20 {
     string public purpose = "Building Unstoppable Apps!!!";
 
     constructor() payable ERC20("MyToken", "MTK") {
-        // what should we do on deploy?
+        // what should we do on deploy?P
+    }
+
+    mapping(uint256 => uint256) price;
+
+    function getPrice(uint256 token) public view returns (uint256) {
+        uint256 cost = price[token];
+        return cost;
+    }
+
+    function buytoken(address buyer, uint256 tokenId)
+        public
+        payable
+        returns (address)
+    {
+        require(msg.value >= price[tokenId], "money less thanks");
+        return buyer;
     }
 
     function setPurpose(string memory newPurpose) public {

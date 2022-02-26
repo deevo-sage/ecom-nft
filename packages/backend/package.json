@@ -8,7 +8,7 @@
   "scripts": {
     "start": "ts-node src/server.ts",
     "studio": "prisma studio",
-    "dev": "nodemon src/server.ts",
+    "devs": "nodemon src/server.ts",
     "web": "tsc && node dist/src/server.js",
     "gen": "prisma generate && prisma db push && npx graphql-codegen"
   },

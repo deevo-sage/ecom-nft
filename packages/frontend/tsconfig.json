@@ -55,7 +55,8 @@
       "@recoil": [
         "src/recoil"
       ]
-    }
+    },
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
