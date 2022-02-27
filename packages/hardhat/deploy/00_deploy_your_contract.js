@@ -33,7 +33,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   await YourContract.RegisterSeller(
     "0x36Fe5e5Da19e1b005f9F5a1d5baD997157F7A3c5"
   );
- w await YourContract.transferOwnership(
+  await YourContract.transferOwnership(
     "0x1Dd8D38e294D632Eab2d445beAc8340462db021d"
   );
 
