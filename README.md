@@ -22,7 +22,7 @@ Our vision is to make a metaverse themed VR based collaborative platform where u
 12. Yarn Workspace
 13. ethereum
 14. polygon
-15. ipfs
+15. nft images hosted on IPFS
 
 # Installation
 
