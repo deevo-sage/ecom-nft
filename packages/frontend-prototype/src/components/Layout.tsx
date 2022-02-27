@@ -69,9 +69,9 @@ interface LinkItemProps {
   link: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: FiHome, link: "/" },
+  { name: "My NFTs", icon: FiHome, link: "/" },
   { name: "Explore", icon: FiCompass, link: "/" },
-  { name: "Sell an Item", icon: AddIcon, link: "/sell" },
+  // { name: "Sell an Item", icon: AddIcon, link: "/sell" },
 ];
 
 // Initialising Web3 things
@@ -320,7 +320,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Raw Mart
+          The Closet
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
@@ -431,7 +431,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         fontFamily="monospace"
         fontWeight="bold"
       >
-        Raw Mart
+        The Closet
       </Text>
 
       <Cart isOpen={isOpen} onClose={onClose} />
@@ -450,29 +450,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               py={2}
               transition="all 0.3s"
               _focus={{ boxShadow: "none" }}
-            >
-              <HStack>
-                <Button size="lg" rounded="lg" color="orange.300">
-                  Connect to Metamask
-                </Button>
-              </HStack>
-            </MenuButton>
-            {auth.currentUser ? (
-              <MenuList bg="gray.900" borderColor="gray.700">
-                <MenuItem
-                  onClick={() => {
-                    auth.signOut();
-                    // router.push("/");
-                  }}
-                >
-                  Sign out
-                </MenuItem>
-              </MenuList>
-            ) : (
-              <MenuList bg="gray.900" borderColor="gray.700">
-                <MenuItem onClick={signIn}>Sign in with Google</MenuItem>
-              </MenuList>
-            )}
+            ></MenuButton>
           </Menu>
         </Flex>
       </HStack>

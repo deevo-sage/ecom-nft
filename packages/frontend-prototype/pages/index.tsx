@@ -26,7 +26,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Raw Mart</title>
+        <title>The Closet</title>
         <meta name="description" content="Ecommerce but better" />
         <link rel="icon" href="/store.png" />
       </Head>
