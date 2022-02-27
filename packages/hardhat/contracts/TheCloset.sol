@@ -40,7 +40,7 @@ contract TheCloset is
         public
         returns (uint256)
     {
-        require(msg.sender == sellerCheck[productId], "sender not seller");
+        require(msg.sender == sellerCheck[productId], "sender is not seller");
         price[productId] = newPrice;
         return newPrice;
     }

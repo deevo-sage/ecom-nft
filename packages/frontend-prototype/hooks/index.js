@@ -1,4 +1,4 @@
-export { default as useDebounce } from "./useDebounce";
-export { default as useLocalStorage } from "./useLocalStorage";
-export { default as useStaticJsonRPC } from "./useStaticJsonRPC";
+export { useDebounce } from "./useDebounce";
+export { useLocalStorage } from "./useLocalStorage";
+export { useStaticJsonRPC } from "./useStaticJsonRPC";
 export * from "./useContractConfig";

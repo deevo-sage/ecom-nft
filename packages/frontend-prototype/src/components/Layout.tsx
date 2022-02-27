@@ -54,14 +54,11 @@ import {
   useBalance,
   useContractLoader,
   useContractReader,
-  useGasPrice,
-  useOnBlock,
   useUserProviderAndSigner,
 } from "eth-hooks";
 import deployedContracts from "../../contracts/hardhat_contracts.json";
 import externalContracts from "../../contracts/external_contracts";
-
-const { ethers } = require("ethers");
+import { BigNumber } from "ethers";
 
 interface LinkItemProps {
   name: string;
@@ -120,7 +117,6 @@ export default function SidebarWithHeader({
   const [injectedProvider, setInjectedProvider] = useState();
   const [address, setAddress] = useState();
   const [selectedNetwork, setSelectedNetwork] = useState(networkOptions[0]);
-  const location = useLocation();
 
   const targetNetwork = NETWORKS[selectedNetwork];
 
@@ -158,7 +154,6 @@ export default function SidebarWithHeader({
   // const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
 
   /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
-  const gasPrice = useGasPrice(targetNetwork, "fast");
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
   const userProviderAndSigner = useUserProviderAndSigner(
     injectedProvider,
@@ -189,7 +184,6 @@ export default function SidebarWithHeader({
   // For more hooks, check out 🔗eth-hooks at: https://www.npmjs.com/package/eth-hooks
 
   // The transactor wraps transactions and provides notificiations
-  const tx = Transactor(userSigner, gasPrice);
 
   // 🏗 scaffold-eth is full of handy hooks like this one to get your balance:
   const yourLocalBalance = useBalance(localProvider, address);
@@ -206,11 +200,6 @@ export default function SidebarWithHeader({
 
   // Load in your local 📝 contract and read a value from it:
   const readContracts = useContractLoader(localProvider, contractConfig);
-  const writeContracts = useContractLoader(
-    userSigner,
-    contractConfig,
-    localChainId
-  );
 
   // If you want to make 🔐 write transactions to your contracts, use the userSigner:
   const writeContracts = useContractLoader(
@@ -226,11 +215,6 @@ export default function SidebarWithHeader({
   // If you want to bring in the mainnet DAI contract it would look like:
   const mainnetContracts = useContractLoader(mainnetProvider, contractConfig);
   // If you want to call a function on a new block
-  useOnBlock(mainnetProvider, () => {
-    console.log(
-      `⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`
-    );
-  });
 
   // Then read your DAI balance like:
   const myMainnetDAIBalance = useContractReader(
@@ -254,26 +238,32 @@ export default function SidebarWithHeader({
     ).toString()}.png`
   );
 
-  useEffect(async () => {
-    let f = await writeContracts.TotalTokens();
-    // let products = writeContracts.tokenURI()
-    for (let i = 0; i < f; i++) {
-      let product = writeContracts.tokenURI(i);
-      let r = fetch(product)
-        .then((res) => res.json())
-        .then(async (data) => {
-          let id = await writeContracts.tokenToProduct(i);
-          let price = await writeContracts.getPrice(id);
-          setItems((prev: any) => {
-            let temp = JSON.parse(JSON.stringify(prev));
-            temp.push(data);
-            return temp;
-          });
-        });
-    }
-    console.log(products);
-  }, []);
+  useEffect(() => {
+    if (writeContracts)
+      (async () => {
+        let f: BigNumber = await writeContracts?.TheCloset?.TotalTokens();
+        // let products = writeContracts.tokenURI()
+        const max = f?.toNumber();
+        const items = [];
 
+        for (let i = 0; i < max; i++) {
+          let product = await writeContracts?.TheCloset?.tokenURI(i);
+          console.log(writeContracts?.TheCloset);
+          await fetch(product)
+            .then((res) => res.json())
+            .then(async (data) => {
+              // let id = await writeContracts?.TheCloset?.tokenToProduct(i);
+              let price = await writeContracts?.TheCloset?.getPrice(i);
+              console.log({ data });
+              items.push(data);
+            });
+        }
+        setItems(items);
+      })();
+  }, [writeContracts]);
+  useEffect(() => {
+    console.log(items);
+  }, [items]);
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
@@ -450,6 +440,10 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               py={2}
               transition="all 0.3s"
               _focus={{ boxShadow: "none" }}
+              onClick={() => {
+                web3Modal();
+                console.log("s");
+              }}
             >
               <HStack>
                 <Button size="lg" rounded="lg" color="orange.300">
