@@ -3,7 +3,7 @@
 > An e-commerce platform that gives an NFT corrosponding to the product purchased from our website. The user gets a closet page with all their NFTs which they can share with their friends for bragging rights
 
 # Our Vision
-Our vision is to make a metaverse themed VR based collaborative platfornm where users have their NFTs as interactable items in VR. Users can visit their friend's closet as well and have an interactive experience and decorate their houses and style their virtual characters with the NFTs they own. Users can represent themselves in the metaverse.
+Our vision is to make a metaverse themed VR based collaborative platform where users have their NFTs as interactable items in VR. Users can visit their friend's closet as well and have an interactive experience and decorate their houses and style their virtual characters with the NFTs they own. Users can represent themselves in the metaverse.
 
 
 # Tech Stack
