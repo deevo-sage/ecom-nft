@@ -20,6 +20,8 @@ Our vision is to make a metaverse themed VR based collaborative platform where u
 10. React Redux
 11. TurboRepo
 12. Yarn Workspace
+13. ethereum
+14. polygon
 
 # Installation
 
