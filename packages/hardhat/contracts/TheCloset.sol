@@ -51,7 +51,10 @@ contract TheCloset is
         uint256 supply,
         string memory metadata
     ) public {
-        require(sellerAuthorized[msg.sender] == true, "seller not authorized");
+        require(
+            sellerAuthorized[msg.sender] == true,
+            "seller is not authorized"
+        );
         metadataURI[productId] = metadata;
         inventory[productId] = supply;
         price[productId] = newPrice;
