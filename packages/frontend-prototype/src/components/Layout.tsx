@@ -69,7 +69,7 @@ interface LinkItemProps {
   link: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: "My NFTs", icon: FiHome, link: "/" },
+  // { name: "My NFTs", icon: FiHome, link: "/" },
   { name: "Explore", icon: FiCompass, link: "/" },
   // { name: "Sell an Item", icon: AddIcon, link: "/sell" },
 ];
