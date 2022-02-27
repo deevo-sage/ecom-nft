@@ -1,4 +1,5 @@
 export const currencies = {
+  matic: { symbol: "M" },
   USD: {
     symbol: "$",
     name: "US Dollar",

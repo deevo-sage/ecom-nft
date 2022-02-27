@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { currencies } from "../../lib/utilities/currencies";
 import { setCart } from "../features/cart";
 import { userState } from "../store";
-import Image from "next/image";
-import { Button, chakra, useToast } from "@chakra-ui/react";
+import { Button, chakra, useToast, Image } from "@chakra-ui/react";
 
 const BuyCard: React.FC<{
   id: string;
@@ -22,9 +21,9 @@ const BuyCard: React.FC<{
   productName = "Something went wrong... :(",
   price = 0,
   discount = 0,
-  currency = "USD",
+  currency = "MATIC",
 }) => {
-  const img = prodImage ? prodImage[0] : "";
+  const img = prodImage;
   let currentPrice;
   let prevPrice;
   if (discount === 0) {
@@ -69,6 +68,7 @@ const BuyCard: React.FC<{
   };
 
   const toast = useToast();
+  console.log({ img });
 
   return (
     <chakra.div

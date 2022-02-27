@@ -1,6 +1,6 @@
 import { useState } from "react";
 // Hook from useHooks! (https://usehooks.com/useLocalStorage/)
-export default function useLocalStorage(key, initialValue, ttl) {
+export function useLocalStorage(key, initialValue, ttl) {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState(() => {
@@ -9,7 +9,12 @@ export default function useLocalStorage(key, initialValue, ttl) {
       const item = window.localStorage.getItem(key);
       const parsedItem = item ? JSON.parse(item) : initialValue;
 
-      if (typeof parsedItem === "object" && parsedItem !== null && "expiry" in parsedItem && "value" in parsedItem) {
+      if (
+        typeof parsedItem === "object" &&
+        parsedItem !== null &&
+        "expiry" in parsedItem &&
+        "value" in parsedItem
+      ) {
         const now = new Date();
         if (ttl && now.getTime() > parsedItem.expiry) {
           // If the item is expired, delete the item from storage
@@ -30,10 +35,11 @@ export default function useLocalStorage(key, initialValue, ttl) {
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
-  const setValue = value => {
+  const setValue = (value) => {
     try {
       // Allow value to be a function so we have same API as useState
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
       // Save state
       setStoredValue(valueToStore);
       // Save to local storage
