@@ -28,7 +28,7 @@ contract TheCloset is
     mapping(string => uint256) public price;
     mapping(string => address) public sellerCheck;
     mapping(address => bool) public sellerAuthorized;
-    mapping(uint256 => string) tokenToProduct;
+    mapping(uint256 => string) public tokenToProduct;
     mapping(string => uint256) public inventory;
     mapping(string => string) public metadataURI;
 
